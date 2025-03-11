@@ -125,7 +125,7 @@ class BoardAjaxController extends BaseController
     {
         $projectid = $_GET['project_id'];
         $user = $this->getUser();
-        $userid = $user['id'];        
+        $userid = $user['id'];
         $collapsed = $this->bigboardModel->collapseFind($projectid, $user['id']);
         if ($collapsed) {
             $status = $this->bigboardModel->collapseDrop($collapsed['id']);
