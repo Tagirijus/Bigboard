@@ -4,9 +4,10 @@
 			<li>
 				<a href="<?= $this->app->config('application_url') ?>"><i class="fa fa-home fa-fw"></i><?= t('Home') ?></a>
 			</li>
-			<li>
+			<!-- my hack does not need this selection button anymore; maybe some day I might make this configurable -->
+			<!-- <li>
 				<?= $this->url->icon('eye', t('Projects Selection'), 'Bigboard', 'select', ['plugin' => 'Bigboard', 'boardview' => 'active', ], false, 'js-modal-medium') ?>
-			</li>
+			</li> -->
 			<li class="collapse_all">
 				<a href="#"><i class="fa fa-folder-o fa-fw"></i><?= t('Collapse projects') ?></a>
 			</li>

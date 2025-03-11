@@ -16,29 +16,20 @@ class BigboardModel extends Base
 	
     public function selectFindAllProjects($user_id)
     {
-        $selectedProjects = $this->db->table(self::SELTABLE)
-            ->eq('user_id', $user_id)
-            ->in('project_id', $this->db->table(ProjectModel::TABLE)->findAllByColumn('id'))
-            ->findAll();
-
-        $projects = array();
-        foreach ($selectedProjects as $selectedProject) {
-            $projects[] = $this->projectModel->getById($selectedProject['project_id']);
+        $user_projects = $this->projectUserRoleModel->getProjectsByUser($user_id, [ProjectModel::ACTIVE]);
+        $projects = [];
+        foreach ($user_projects as $project_id => $user_project) {
+            $projects[] = $this->projectModel->getById($project_id);
         }
-
         return $projects;
     }
 
     public function selectFindAllProjectsById($user_id)
     {
-        $selectedProjects = $this->db->table(self::SELTABLE)
-            ->eq('user_id', $user_id)
-            ->in('project_id', $this->db->table(ProjectModel::TABLE)->findAllByColumn('id'))
-            ->findAll();
-
-        $projects = array();
-        foreach ($selectedProjects as $selectedProject) {
-            $projects[] = $selectedProject['project_id'];
+        $user_projects = $this->projectUserRoleModel->getProjectsByUser($user_id, [ProjectModel::ACTIVE]);
+        $projects = [];
+        foreach ($user_projects as $project_id => $user_project) {
+            $projects[] = $project_id;
         }
 		sort($projects);
         return $projects;
