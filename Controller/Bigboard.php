@@ -163,6 +163,7 @@ class Bigboard extends BaseController
             if ($this->bigboardModel->selectFind($project_id, $user['id'])) {
                 $project = $this->projectModel->getByIdWithOwner($project_id);
                 $search = $this->userSession->getBigBoardSearch();
+                $this->logger->info(json_encode($search));
                 ++$nb;
 
                 $this->userMetadataCacheDecorator->set(UserMetadataModel::KEY_BOARD_COLLAPSED.$project_id, $this->userSession->isBigboardCollapsed());

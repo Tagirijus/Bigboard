@@ -55,7 +55,7 @@ class Plugin extends Base
 
     public function getPluginDescription()
     {
-        return t('BigBoard: a Kanboard that displays selected multiple projects');
+        return t('BigBoard: a Kanboard that displays multiple projects');
     }
 
     public function getPluginAuthor()
