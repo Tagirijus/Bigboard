@@ -158,12 +158,25 @@ class Bigboard extends BaseController
     {
         echo "<div id='bigboard'>";
         $user = $this->getUser();
+        $search = $this->userSession->getBigBoardSearch();
+
+        // find tasks and the project ids so that on board printing
+        // empty results can be skipped at all
+        $found_tasks = $this->taskLexer->build($search)->toArray();
+        $found_projects = [];
+        foreach ($found_tasks as $task) {
+            $found_projects[] = $task['project_id'];
+        }
+
         $nb = 0;
         foreach ($project_ids as $project_id) {
             if ($this->bigboardModel->selectFind($project_id, $user['id'])) {
                 $project = $this->projectModel->getByIdWithOwner($project_id);
-                $search = $this->userSession->getBigBoardSearch();
-                $this->logger->info(json_encode($search));
+                $found_tasks = $this->taskLexer->build($search)->toArray();
+                if (!in_array($project_id, $found_projects)) {
+                    continue;
+                }
+
                 ++$nb;
 
                 $this->userMetadataCacheDecorator->set(UserMetadataModel::KEY_BOARD_COLLAPSED.$project_id, $this->userSession->isBigboardCollapsed());
