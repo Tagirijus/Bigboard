@@ -148,6 +148,24 @@ class Bigboard extends BaseController
     }
 
     /**
+     * Find all swimlane search strings from the query.
+     *
+     * @param  string $query
+     * @return array
+     */
+    private function findSwimlaneElements($query='')
+    {
+        $elements = explode(' ', $query);
+        $swimlaneElements = array_filter($elements, function($element) {
+            return strpos($element, 'swimlane:') === 0;
+        });
+        $result = array_map(function($element) {
+            return str_replace('"', '', str_replace('swimlane:', '', $element));
+        }, $swimlaneElements);
+        return $result;
+    }
+
+    /**
      * Show projects.
      *
      * @param $project_ids list of project ids to show
@@ -163,6 +181,7 @@ class Bigboard extends BaseController
         // find tasks and the project ids so that on board printing
         // empty results can be skipped at all
         $found_tasks = $this->taskLexer->build($search)->toArray();
+
         $found_projects = [];
         foreach ($found_tasks as $task) {
             $found_projects[] = $task['project_id'];
@@ -181,6 +200,25 @@ class Bigboard extends BaseController
 
                 $this->userMetadataCacheDecorator->set(UserMetadataModel::KEY_BOARD_COLLAPSED.$project_id, $this->userSession->isBigboardCollapsed());
 
+                // swimlane chose logic
+                // only show swimlanes, which are filtere by the query or all, if no
+                // "swimlane" query search string exists
+                $all_swimlanes = $this->taskLexer
+                    ->build($search)
+                    ->format(BoardFormatter::getInstance($this->container)->withProjectId($project['id']));
+                $swimlanes = [];
+                if (strpos($search, 'swimlane') === false) {
+                    $swimlanes = $all_swimlanes;
+                } else {
+                    $query_swimlanes = $this->findSwimlaneElements($search);
+                    foreach ($all_swimlanes as $all_swimlane) {
+                        $all_swimlane_name = $all_swimlane['name'];
+                        if (in_array($all_swimlane_name, $query_swimlanes)) {
+                            $swimlanes[] = $all_swimlane;
+                        }
+                    }
+                }
+
                 echo $this->template->render('bigboard:board/view', [
                     'no_layout' => true,
                     'board_selector' => false,
@@ -189,9 +227,7 @@ class Bigboard extends BaseController
                     'description' => $this->helper->projectHeader->getDescription($project),
                     'board_private_refresh_interval' => $this->configModel->get('board_private_refresh_interval'),
                     'board_highlight_period' => $this->configModel->get('board_highlight_period'),
-                    'swimlanes' => $this->taskLexer
-                        ->build($search)
-                        ->format(BoardFormatter::getInstance($this->container)->withProjectId($project['id'])),
+                    'swimlanes' => $swimlanes,
                 ]);
             }
         }
