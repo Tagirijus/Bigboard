@@ -183,8 +183,7 @@ class Bigboard extends BaseController
         }
         if (0 == $nb) {
             echo "<div align=center><p>&nbsp;<p>&nbsp;<p>&nbsp;<p></br><span class='alert'><i class='fa fa-info fa-fw js-modal-medium'></i>";
-            echo t('no project has been selected yet for multiple view ; you can select some now : ');
-            echo "<i class='fa fa-cogs fa-fw'></i><a href='?controller=Bigboard&amp;action=select&amp;plugin=Bigboard&amp;boardview=active' class='js-modal-medium' title='options'>".t('options').'</a>';
+            echo t('no tasks for all user projects has been found');
             echo '</span></div>';
         }
         echo '</div>';
