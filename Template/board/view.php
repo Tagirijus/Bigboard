@@ -38,13 +38,17 @@ if ($this->app->bigboardModel->collapseFind($project['id'], $this->user->getId()
 				<i id="close-<?= $this->text->e($project['id']) ?>" style="display:<?= $close ?>" class="fa fa-folder close"></i>
 				<i id="wip-<?= $this->text->e($project['id']) ?>" style="display:none" class="fa fa-cog fa-spin fa-fw"></i>
 			</span>
-			<small>#<?= $this->text->e($project['id']) ?></small>
-			<?= $fav ?>
-			<?= $this->text->e($project['name']) ?>
-			<?= $priv ?>
-			<?php if (!empty($project['description'])) : ?>
-				<?= $this->app->tooltipMarkdown($project['description']) ?>
-			<?php endif ?>
+		</div>
+		<div class="btn bbprojecturl">
+			<a href="/board/<?= $this->text->e($project['id']) ?>">
+				<small>#<?= $this->text->e($project['id']) ?></small>
+				<?= $fav ?>
+				<?= $this->text->e($project['name']) ?>
+				<?= $priv ?>
+				<?php if (!empty($project['description'])) : ?>
+					<?= $this->app->tooltipMarkdown($project['description']) ?>
+				<?php endif ?>
+			</a>
 		</div>
 	</div>
 
