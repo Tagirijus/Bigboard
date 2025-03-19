@@ -88,7 +88,7 @@ class Bigboard extends BaseController
             'custom_filters_list' => isset($custom_filters_list) ? $custom_filters_list : [],
             'users_list' => isset($users_list) ? $users_list : [],
             'categories_list' => isset($categories_list) ? $categories_list : [],
-            'title' => t('BigBoard').' ('.$nb_projects.') ',
+            'title' => t('BigBoard'),  //.' ('.$nb_projects.') ',
         ]));
         // Draw a header First
         $menu = $this->template->render('bigboard:board/switcher', [
@@ -189,7 +189,11 @@ class Bigboard extends BaseController
 
         $nb = 0;
         foreach ($project_ids as $project_id) {
-            if ($this->bigboardModel->selectFind($project_id, $user['id'])) {
+            // "|| true" is here, since it could be replaced by an optional
+            // config setting which could enable or disable the need of
+            // selecting projects; also this option could be used to show the
+            // selector button, which I commented out in the template
+            if ($this->bigboardModel->selectFind($project_id, $user['id']) || true) {
                 $project = $this->projectModel->getByIdWithOwner($project_id);
                 $found_tasks = $this->taskLexer->build($search)->toArray();
                 if (!in_array($project_id, $found_projects)) {
