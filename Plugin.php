@@ -14,7 +14,10 @@ class Plugin extends Base
         $this->template->hook->attach('template:dashboard:page-header:menu', 'bigboard:header/bigboard_header_link');
         $this->template->hook->attach('template:project-header:view-switcher', 'bigboard:header/bigboard_header_link');
 
-        if ($this->request->getStringParam("plugin") == "Bigboard") {
+        if (
+            $this->request->getStringParam("plugin") == "Bigboard"
+            || strpos($this->request->getUri(), '/bigboard') !== false
+        ) {
             $this->template->setTemplateOverride('board/table_container', 'bigboard:board/table_container');
             $this->template->setTemplateOverride('board/table_tasks', 'bigboard:board/table_tasks');
             $this->template->setTemplateOverride('board/table_private', 'bigboard:board/table_private');
