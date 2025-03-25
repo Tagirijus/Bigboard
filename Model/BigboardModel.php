@@ -31,7 +31,7 @@ class BigboardModel extends Base
         foreach ($user_projects as $project_id => $user_project) {
             $projects[] = $project_id;
         }
-		sort($projects);
+		// sort($projects);
         return $projects;
     }
 
